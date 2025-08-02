@@ -2,8 +2,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-df_real_traj = pd.read_csv("draw_traj_ROS/synchronize_data/tinympc_uart_100Hz/xk_history.csv")
-df_ref_traj = pd.read_csv("draw_traj_ROS/synchronize_data/tinympc_uart_100Hz/xk_ref.csv")
+df_real_traj = pd.read_csv("draw_traj_ROS/synchronize_data/qpOASES_uart_100Hz/xk_history.csv")
+df_ref_traj = pd.read_csv("draw_traj_ROS/synchronize_data/qpOASES_uart_100Hz/xk_ref.csv")
 
 fig=plt.figure(figsize=(10,8))
     
