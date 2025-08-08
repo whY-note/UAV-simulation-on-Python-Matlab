@@ -12,8 +12,8 @@ import matplotlib.pyplot as plt
 # ====== 参数配置 ======
 duration = 40.0         # 总时长（秒）
 time_step = 0.005         # 时间步长（秒）
-radius = 1.0            # 8字形半径（米）
-target_height = 2.0     # 目标飞行高度（米）
+radius = 1            # 8字形半径（米）
+target_height = 1    # 目标飞行高度（米）
 climb_time = 5.0        # 爬升到目标高度的时间（秒）
 omega = 0.5             # 角速度（控制轨迹速度）
 
@@ -28,20 +28,22 @@ y = 0.5 * radius * np.sin(2 * omega * t)     # Y轴位置
 vx = radius * omega * np.cos(omega * t)      # X方向速度
 vy = 0.5 * radius * 2 * omega * np.cos(2 * omega * t)  # Y方向速度
 
+# 倾斜30度
+z = target_height+ y*np.tan(np.pi/6) + x*np.tan(np.pi/6) 
+vz = target_height+ vy*np.tan(np.pi/6) + vx*np.tan(np.pi/6)
+
 # --- 垂直方向（Z轴） ---
-z = np.zeros_like(t)                         # 初始高度为0
-vz = np.zeros_like(t)                        # 初始垂直速度为0
+# z = np.zeros_like(t)                         # 初始高度为0
+# vz = np.zeros_like(t)                        # 初始垂直速度为0
 
-# 爬升阶段（使用平滑的余弦过渡）
-climb_mask = t <= climb_time
-z[climb_mask] = target_height * (1 - np.cos(np.pi * t[climb_mask] / climb_time)) / 2
-vz[climb_mask] = (target_height * np.pi / (2 * climb_time)) * np.sin(np.pi * t[climb_mask] / climb_time)
+# # 爬升阶段（使用平滑的余弦过渡）
+# climb_mask = t <= climb_time
+# z[climb_mask] = target_height * (1 - np.cos(np.pi * t[climb_mask] / climb_time)) / 2
+# vz[climb_mask] = (target_height * np.pi / (2 * climb_time)) * np.sin(np.pi * t[climb_mask] / climb_time)
 
-# z[climb_mask] = target_height/climb_time * t[climb_mask] 
-
-# 平飞阶段（保持目标高度）
-z[~climb_mask] = target_height
-vz[~climb_mask] = 0
+# # 平飞阶段（保持目标高度）
+# z[~climb_mask] = target_height
+# vz[~climb_mask] = 0
 
 # ====== 姿态与角速度 ======
 # 假设无人机始终朝向速度方向（简化处理）
@@ -122,6 +124,6 @@ with open('fig8_trajectory.txt', 'w') as f:
 
 XRef= states
 
-last_climb_idx = len(climb_mask) - 1 - np.argmax(climb_mask[::-1])
-XRef_noUpward =states[last_climb_idx:]
-print(XRef_noUpward)
+# last_climb_idx = len(climb_mask) - 1 - np.argmax(climb_mask[::-1])
+# XRef_noUpward =states[last_climb_idx:]
+# print(XRef_noUpward)

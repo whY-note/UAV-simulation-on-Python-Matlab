@@ -261,6 +261,7 @@ R = np.diag([0.1,0.1,0.1,0.1])
 Q = np.diag([10,10,10,1,1,1,1,1,1,1,1,1])
 R = np.diag([0.1,0.1,0.1,0.1])
 ```
+问题设定：时不变（qpB）
 
 相应的xk，uk, xref记录在`draw_traj_ROS\synchronize_data\qpOASES_uart_100Hz`目录下
 
@@ -299,6 +300,8 @@ Q = np.diag([10,10,10,1,1,1,1,1,1,1,1,1])
 R = np.diag([0.1,0.1,0.1,0.1])
 ```
 
+问题设定：假时变，真时不变
+
 相应的xk，uk, xref记录在`draw_traj_ROS\synchronize_data\tinympc_uart_100Hz`目录下
 
 ![ROS_uart_tinympc_fig8_100Hz](Lab_note.assets/ROS_uart/ROS_uart_tinympc_fig8_100Hz.png)
@@ -331,5 +334,74 @@ Horizontal Error: 0.1974
 最后1圈的误差
 |solver name|xy的RMSE |xyz的RMSE |
 |---|---|---|
-|qpOASES|0.2133|0.2151|
-|tinympc|0.2030|0.2031|
+|qpOASES（时不变）|0.2133|0.2151|
+|tinympc（假时变）|0.2030|0.2031|
+
+### qpOASES
+20250806
+参数设定：
+1. 轨迹为8字型，共8000个参考点
+2. 使用50Hz离散化后的A,B
+3. Q,R 如下：
+```python
+Q = np.diag([10,10,10,1,1,1,1,1,1,1,1,1])
+R = np.diag([0.1,0.1,0.1,0.1])
+```
+问题设定：假时变（SQP），真时不变
+
+结果：
+在100Hz的控制频率下，使用qpOASES求解时变问题，单次求解需要约73ms,无法在10ms内求解完成,导致无人机无法正常飞行。
+
+### tinmpc
+20250806
+参数设定：
+1. 轨迹为8字型，共8000个参考点
+2. 使用50Hz离散化后的A,B
+3. Q,R 如下：
+```python
+Q = np.diag([10,10,10,1,1,1,1,1,1,1,1,1])
+R = np.diag([0.1,0.1,0.1,0.1])
+```
+问题设定：假时变（SQP），真时不变
+
+结果：
+在100Hz的控制频率下，使用TinyMPC求解时变问题，如果不开优化(o0)，单次求解需要约11ms,无法在10ms内求解完成,导致无人机无法正常飞行。
+
+如果开优化(o2)，可以飞行，效果如下：
+![ROS_uart_tinympc_o2_fig8_100Hz_time_vary](Lab_note.assets/ROS_uart/ROS_uart_tinympc_o2_fig8_100Hz_time_vary.png)
+
+
+![ROS_uart_tinympc_o2_fig8_100Hz_time_vary_xy](Lab_note.assets/ROS_uart/ROS_uart_tinympc_o2_fig8_100Hz_time_vary_xy.png)
+
+1 圈
+![ROS_uart_tinympc_o2_fig8_100Hz_time_vary_xy_1circle](Lab_note.assets/ROS_uart/ROS_uart_tinympc_o2_fig8_100Hz_time_vary_xy_1circle.png)
+
+数据在：`draw_traj_ROS\synchronize_data\tinympc_uart_100Hz_time_vary`
+平均求解时间约：2.4ms
+
+### COD-MPC(我们的求解器)
+20250806
+参数设定：
+1. 轨迹为8字型，共8000个参考点
+2. 使用50Hz离散化后的A,B
+3. Q,R 如下：
+```python
+Q = np.diag([10,10,10,1,1,1,1,1,1,1,1,1])
+R = np.diag([0.1,0.1,0.1,0.1])
+```
+问题设定：假时变（SQP），真时不变
+
+结果：
+优化(o2)
+
+如果开优化(o2)，可以飞行，效果如下：
+![ROS_uart_CODMPC_fig8_100Hz_time_vary](Lab_note.assets/ROS_uart/ROS_uart_CODMPC_fig8_100Hz_time_vary.png)
+
+
+![ROS_uart_CODMPC_fig8_100Hz_time_vary_xy](Lab_note.assets/ROS_uart/ROS_uart_CODMPC_fig8_100Hz_time_vary_xy.png)
+
+1 圈
+![ROS_uart_CODMPC_fig8_100Hz_time_vary_xy_1circle](Lab_note.assets/ROS_uart/ROS_uart_CODMPC_fig8_100Hz_time_vary_xy_1circle.png)
+
+数据在：`draw_traj_ROS\synchronize_data\CODMPC_uart_100Hz_time_vary`
+平均求解时间约：0.9ms

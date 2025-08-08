@@ -2,8 +2,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-df_real_traj = pd.read_csv("draw_traj_ROS/synchronize_data/qpOASES_uart_100Hz/xk_history.csv")
-df_ref_traj = pd.read_csv("draw_traj_ROS/synchronize_data/qpOASES_uart_100Hz/xk_ref.csv")
+# df_real_traj = pd.read_csv("draw_traj_ROS/synchronize_data/qpOASES_uart_100Hz/xk_history.csv")
+# df_ref_traj = pd.read_csv("draw_traj_ROS/synchronize_data/qpOASES_uart_100Hz/xk_ref.csv")
+df_real_traj = pd.read_csv("draw_traj_ROS/synchronize_data/tinympc_o0_uart_100Hz_time_vary/xk_history.csv")
+df_real_traj=df_real_traj.iloc[:130,:]
+df_ref_traj = pd.read_csv("draw_traj_ROS/synchronize_data/tinympc_o0_uart_100Hz_time_vary/xk_ref.csv")
+
 
 fig=plt.figure(figsize=(10,8))
     
@@ -22,7 +26,7 @@ ax.plot(df_ref_traj.iloc[:,0], df_ref_traj.iloc[:,1], df_ref_traj.iloc[:,2],
 ax.set_xlabel('X Axis')
 ax.set_ylabel('Y Axis')
 ax.set_zlabel('Z Axis')
-ax.set_title('3D Visualization of Table Data')
+
 # 添加网格和视图调整
 ax.grid(True, linestyle='--', alpha=0.5)
 
@@ -112,7 +116,7 @@ def calculate_trajectory_errors(df_real, df_ref):
 
 # 选取一圈
 real_start=5471
-real_end=len(df_real_traj)
+real_end=7973
 
 # 画一圈的轨迹
 plt.plot(df_real_traj_xyz.iloc[real_start:real_end,0],df_real_traj_xyz.iloc[real_start:real_end,1], 'b-', label='Real Trajectory') 

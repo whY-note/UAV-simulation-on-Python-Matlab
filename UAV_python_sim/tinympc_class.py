@@ -9,8 +9,8 @@ import pandas as pd
 # from UAV_tinympc_500Hz.reference_trajectory.traj_fig8 import XRef
 
 # 选择参数
-# from UAV_m105.parameters.param_ABQR_m105_50Hz import A,B,Q,R
-from UAV_m105.parameters.param_ABQR_m105_100Hz import A,B,Q,R
+from UAV_m105.parameters.param_ABQR_m105_50Hz import A,B,Q,R
+# from UAV_m105.parameters.param_ABQR_m105_100Hz import A,B,Q,R
 
 # 选择轨迹
 from UAV_Trajectory.traj_8 import XRef  # 8字型轨迹
@@ -21,7 +21,7 @@ from UAV_Trajectory.traj_8 import XRef  # 8字型轨迹
 # from UAV_Trajectory.traj_hover1 import XRef
 
 # 参数初始化
-N = 30
+N = 20
 Nu = 4
 Nx = 12
 
