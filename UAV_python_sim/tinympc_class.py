@@ -13,7 +13,8 @@ from UAV_m105.parameters.param_ABQR_m105_50Hz import A,B,Q,R
 # from UAV_m105.parameters.param_ABQR_m105_100Hz import A,B,Q,R
 
 # 选择轨迹
-from UAV_Trajectory.traj_8 import XRef  # 8字型轨迹
+from UAV_Trajectory.traj_heart_xz import XRef    # xz平面内的心型轨迹
+# from UAV_Trajectory.traj_8 import XRef  # 8字型轨迹
 # from UAV_Trajectory.hover_and_traj_8 import XRef # 先竖直上升，然后8字型轨迹
 # from UAV_Trajectory.traj_8_song import XRef # 宋博的8字型轨迹
 
@@ -206,10 +207,10 @@ class TinyMPC:
             # 更新xk0
             self.xk[:,0]=self.xk[:,1]
         
-        df_uk_history=pd.DataFrame(self.uk_history)
-        df_uk_history.to_excel("tinympc_class_data/uk_history.xlsx")
-        df_xk_history=pd.DataFrame(self.xk_history)
-        df_xk_history.to_excel("tinympc_class_data/xk_history.xlsx")
+        # df_uk_history=pd.DataFrame(self.uk_history)
+        # df_uk_history.to_excel("tinympc_class_data/uk_history.xlsx")
+        # df_xk_history=pd.DataFrame(self.xk_history)
+        # df_xk_history.to_excel("tinympc_class_data/xk_history.xlsx")
         # df_xk_before_solve_history=pd.DataFrame( self.xk_before_solve_history)
         # df_xk_before_solve_history.to_excel("tinympc_class_data/xk_before_solve_history.xlsx")
 

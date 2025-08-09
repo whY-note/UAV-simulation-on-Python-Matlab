@@ -1,54 +1,57 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-# # ====== 参数配置 ======
-# duration = 80.0         # 总时长（秒）
-# time_step = 0.02         # 时间步长（秒）
-# radius = 1.0            # 8字形半径（米）
-# target_height = 2.0     # 目标飞行高度（米）
-# climb_time = 5.0        # 爬升到目标高度的时间（秒）
-# omega = 0.5             # 角速度（控制轨迹速度）
+# # 参数设置
+# x0 , z0 =0,0 # 起点
+# s = 0.08  # 缩放因子
+# x_center, z_center = 0 + x0,  17*s + z0 # 中心点坐标
+# theta = np.linspace(-np.pi, np.pi, 1000)  # 参数范围[0, 2π]
 
+# # 爱心方程
+# x=x_center + s*(16*(np.sin(theta))**3)
+# z=z_center + s*(13*np.cos(theta) - 5*np.cos(2*theta) - 2*np.cos(3*theta) -np.cos(4*theta))
+
+# # 在X-Z平面绘图
+# plt.figure(figsize=(8, 8))
+# plt.plot(x, z, color='red', linewidth=3)
+# plt.scatter(x[0],z[0], color = 'b', label = 'Start point')
+# plt.axis('equal')
+# plt.title('Heart Curve in X-Z Plane')
+# plt.xlabel('X-axis')
+# plt.ylabel('Z-axis')
+# plt.grid(True, alpha=0.3)
+# plt.show()
+
+
+'''----------------------生成3D轨迹----------------------'''
 # ====== 参数配置 ======
 duration = 40.0         # 总时长（秒）
 time_step = 0.005         # 时间步长（秒）
-radius = 1            # 8字形半径（米）
-target_height = 1    # 目标飞行高度（米）
-climb_time = 5.0        # 爬升到目标高度的时间（秒）
+
 omega = 0.5             # 角速度（控制轨迹速度）
+x0 ,y0, z0 =0,0,0 # 起点
+s = 0.08  # 缩放因子
 
 # ====== 生成时间序列 ======
 t = np.arange(0, duration, time_step)
 
 # ====== 轨迹方程 ======
-# --- 水平方向（X-Y平面） ---
-x = radius * np.sin(omega * t)               # X轴位置
-y = 0.5 * radius * np.sin(2 * omega * t)     # Y轴位置
+theta = omega*t - np.pi
 
-vx = radius * omega * np.cos(omega * t)      # X方向速度
-vy = 0.5 * radius * 2 * omega * np.cos(2 * omega * t)  # Y方向速度
+x_center, z_center = 0 + x0,  17*s + z0 +0.2  # 中心点坐标 （稍微高一点，避免撞地）
 
-# 倾斜30度
-z = target_height+ y*np.tan(np.pi/6) + x*np.tan(np.pi/6) 
-vz = target_height+ vy*np.tan(np.pi/6) + vx*np.tan(np.pi/6)
+# x-z平面上的爱心方程
+x=x_center + s*(16*(np.sin(theta))**3)
+z=z_center + s*(13*np.cos(theta) - 5*np.cos(2*theta) - 2*np.cos(3*theta) -np.cos(4*theta))
+y=np.zeros_like(t)
 
-# --- 垂直方向（Z轴） ---
-# z = np.zeros_like(t)                         # 初始高度为0
-# vz = np.zeros_like(t)                        # 初始垂直速度为0
-
-# # 爬升阶段（使用平滑的余弦过渡）
-# climb_mask = t <= climb_time
-# z[climb_mask] = target_height * (1 - np.cos(np.pi * t[climb_mask] / climb_time)) / 2
-# vz[climb_mask] = (target_height * np.pi / (2 * climb_time)) * np.sin(np.pi * t[climb_mask] / climb_time)
-
-# # 平飞阶段（保持目标高度）
-# z[~climb_mask] = target_height
-# vz[~climb_mask] = 0
+vx = np.zeros_like(t)
+vy = np.zeros_like(t)
+vz = np.zeros_like(t)
 
 # ====== 姿态与角速度 ======
 # 假设无人机始终朝向速度方向（简化处理）
-yaw = np.arctan2(vy, vx)                     # 偏航角（基于水平速度方向）
-yaw = np.unwrap(yaw)                         # 解除角度跳变
+yaw = np.zeros_like(t)                     # 偏航角（基于水平速度方向）
 
 # Roll/Pitch 保持水平（设为0）
 roll = np.zeros_like(t)
@@ -57,21 +60,15 @@ pitch = np.zeros_like(t)
 # 角速度（姿态导数）
 p = np.zeros_like(t)                         # Roll角速度
 q = np.zeros_like(t)                         # Pitch角速度
-r = np.gradient(yaw, t)                      # Yaw角速度
-
+r = np.zeros_like(t)                         # Yaw角速度
 
 # ====== 组合状态量 ======
 # 状态量顺序：[x, y, z, vx, vy, vz, roll, pitch, yaw, p, q, r]
 states = np.vstack([x, y, z, vx, vy, vz, roll, pitch, yaw, p, q, r]).T
 
 
-states[:,3:]=0
-
-print(states.shape)
 # ====== 可视化 ======
 plt.figure(figsize=(14, 10))
-
-# 3D轨迹
 ax1 = plt.subplot(221, projection='3d')
 ax1.plot(x, y, z, label='Reference Path')
 ax1.scatter(x[0], y[0], z[0], c='r', s=50)
@@ -81,7 +78,6 @@ ax1.set_zlabel('Z (m)')
 # ax1.set_title('3D Trajectory from Ground')
 ax1.set_box_aspect([-1,1,1])
 ax1.legend()
-
 
 # 高度变化
 plt.subplot(222)
@@ -115,7 +111,7 @@ plt.legend()
 plt.tight_layout()
 plt.show()
 
-with open('fig8_trajectory.txt', 'w') as f:
+with open('heart_xz_trajectory.txt', 'w') as f:
     # 写入表头
     f.write("# x(m) y(m) z(m) dx(m/s) dy(m/s) dz(m/s) roll(rad) pitch(rad) yaw(rad) droll(rad/s) dpitch(rad/s) dyaw(rad/s)\n")
     
@@ -126,6 +122,3 @@ with open('fig8_trajectory.txt', 'w') as f:
 
 XRef= states
 
-# last_climb_idx = len(climb_mask) - 1 - np.argmax(climb_mask[::-1])
-# XRef_noUpward =states[last_climb_idx:]
-# print(XRef_noUpward)

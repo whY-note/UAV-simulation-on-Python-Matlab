@@ -5,16 +5,16 @@ import matplotlib.pyplot as plt
 
 FILE_ROOT="draw_traj_ROS/synchronize_data/"
 
-
-df_real_tinympc = pd.read_csv(FILE_ROOT + "tinympc_uart_100Hz_time_vary_y30dg_x30dg_5/xk_history.csv")
-df_real_qpOASES = pd.read_csv(FILE_ROOT + "qpOASES_uart_100Hz_time_vary_y30dg_x30dg/xk_history.csv")
-df_real_ours=pd.read_csv(FILE_ROOT + "CODMPC_uart_100Hz_time_vary_y30dg_x30dg_2/xk_history.csv")
+# 
+df_real_tinympc = pd.read_csv(FILE_ROOT + "tinympc_uart_100Hz_time_vary_heart_xz/xk_history.csv")
+df_real_qpOASES = pd.read_csv(FILE_ROOT + "qpOASES_uart_100Hz_time_vary_heart_xz/xk_history.csv")
+df_real_ours=pd.read_csv(FILE_ROOT + "CODMPC_uart_100Hz_time_vary_heart_xz/xk_history.csv")
 
 # df_real_tinympc = pd.read_csv(FILE_ROOT + "tinympc_uart_100Hz_time_vary/xk_history.csv")
 # df_real_qpOASES = pd.read_csv(FILE_ROOT + "qpOASES_uart_100Hz_time_vary/xk_history.csv")
 # df_real_ours=pd.read_csv(FILE_ROOT + "CODMPC_uart_100Hz_time_vary/xk_history.csv")
 
-df_ref = pd.read_csv(FILE_ROOT + "tinympc_uart_100Hz_time_vary_y30dg_x30dg/xk_ref.csv")
+df_ref = pd.read_csv(FILE_ROOT + "CODMPC_uart_100Hz_time_vary_heart_xz_2/xk_ref.csv")
 print(df_ref)
 
 '''
@@ -23,8 +23,8 @@ solver_name:
 - qpOASES
 - ours
 '''
-df_time_tinympc = pd.read_csv(FILE_ROOT + "tinympc_uart_100Hz_time_vary_y30dg_x30dg_5/uk_history.csv")
-df_time_ours = pd.read_csv(FILE_ROOT + "CODMPC_uart_100Hz_time_vary_y30dg_x30dg_2/uk_history.csv")
+df_time_tinympc = pd.read_csv(FILE_ROOT + "tinympc_uart_100Hz_time_vary_heart_xz/uk_history.csv")
+df_time_ours = pd.read_csv(FILE_ROOT + "CODMPC_uart_100Hz_time_vary_heart_xz_2/uk_history.csv")
 
 start_time=0
 end_time = 80 # unit:s
@@ -39,7 +39,7 @@ fig8_single_end= 7972
 
 # q取出一圈的轨迹
 df_real_xyz_tinympc=df_real_tinympc.iloc[fig8_single_start: fig8_single_end,:3]
-df_real_xyz_qpOASES=df_real_qpOASES.iloc[:30,:3]
+df_real_xyz_qpOASES=df_real_qpOASES.iloc[:45,:3]
 df_real_xyz_ours=df_real_ours.iloc[fig8_single_start: fig8_single_end,:3] 
 
 df_ref_xyz=df_ref.iloc[fig8_single_start: fig8_single_end,:3]
@@ -88,6 +88,7 @@ ax.set_xlabel('X Axis')
 ax.set_ylabel('Y Axis')
 ax.set_zlabel('Z Axis')
 ax.set_box_aspect([-1, 1, 1]) 
+ax.set_ylim(-0.2,0.2)
 # ax.set_zlim(0, 0.7)
 ax.grid(True, linestyle='--', alpha=0.5)
 plt.legend(loc='upper right')
