@@ -411,7 +411,7 @@ $$
 \end{bmatrix}
 $$
 
-从而构成矩阵A
+从而构成矩阵$A$
 $$
 A=\frac{\partial{\mathbf{f}}}{\partial{\mathbf{x}}}  \big|_{\mathbf{x}=\mathbf{x_{e}}}=
 \begin{bmatrix}
@@ -437,7 +437,7 @@ A=\frac{\partial{\mathbf{f}}}{\partial{\mathbf{x}}}  \big|_{\mathbf{x}=\mathbf{x
 0 \quad 0 \quad 0 \quad 0 \quad 0 \quad 0 \quad 0 \quad 0 \quad 0 \quad 0 \quad 0 \quad 0
 \end{bmatrix} \tag{10}
 $$
-**f** 对**u**求偏导
+$f$对$u$求偏导
 $$
 \frac{\partial{\dot{x}}}{\partial{\mathbf{u}}}=
 \begin{bmatrix}
@@ -543,7 +543,7 @@ $$
 \end{bmatrix}
 $$
 
-从而构成矩阵B
+从而构成矩阵$B$
 $$
 B=\frac{\partial{\mathbf{f}}}{\partial{\mathbf{u}}}  \big|_{\mathbf{u}=\mathbf{u_{e}}}=
 \begin{bmatrix}
@@ -583,9 +583,9 @@ $$
 \mathbf{\dot{\widetilde{x}}}=A\cdot{\mathbf{\widetilde{x}}} + B\cdot{\mathbf{\widetilde{u}}}
 \tag{13}
 $$
-由于**y**一般取12个状态量中的某几个，比如：x,y,z,yaw。
+由于$\mathbf{y}$一般取12个状态量中的某几个，比如：$x$,$y$,$z$,$yaw$。
 
-所以**y**一般与**x**，**u**是线性关系，不需要线性化
+所以$\mathbf{y}$一般与$\mathbf{x}$，$\mathbf{u}$是线性关系，不需要线性化
 
 从而，总的线性模型为
 $$
@@ -662,13 +662,13 @@ $$
 \mathbf{y_{[k]}}=C\mathbf{x_{[k]}}+D\mathbf{u_{[k]}}
 \tag{14}
 $$
-设采样周期为**Ts**，则
+设采样周期为$T_s$，则
 $$
 \mathbf{\dot{x}_{[k]}}=\frac{\mathbf{x_{[k+1]}}-\mathbf{x_{[k]}}}{T_s
 }
 \tag{15}
 $$
-j将(15)代入方程(14)得
+将(15)代入方程(14)得
 $$
 \frac{\mathbf{x_{[k+1]}}-\mathbf{x_{[k]}}}{T_s
 }=A\mathbf{x_{[k]}}+B\mathbf{u_{[k]}}
@@ -677,13 +677,13 @@ $$
 $$
 \mathbf{x_{[k+1]}}=\left(I+{T_s}A \right) \mathbf{x_{[k]}}+ {T_s}B \mathbf{u_{[k]}}
 $$
-所以离散化后的矩阵A，B为
+所以离散化后的矩阵$A$，$B$为
 $$
 A_d=I+{T_s}A\\
 B_d={T_s}B
 \tag{16}
 $$
-而离散化后的矩阵C，D不变
+而离散化后的矩阵$C$，$D$不变
 $$
 C_d=C\\
 D_d=D
@@ -810,7 +810,7 @@ $$
 A_d=e^{A T_s}\\
 B_d=B\int_{0}^{T_s}e^{At}\,dt
 $$
-而离散化后的矩阵C，D不变
+而离散化后的矩阵$C$，$D$不变
 $$
 C_d=C\\
 D_d=D
@@ -822,7 +822,7 @@ $$
 $$
 
 
-网上介绍，零阶保持法的效果更好，而且 **MATLAB** 自带的函数 **c2d()**默认就是使用零阶保持法。
+网上介绍，零阶保持法的效果更好，而且 **MATLAB** 自带的函数 **`c2d()`**默认就是使用零阶保持法。
 
 所以，我选择了**零阶保持法**，对(13)的连续状态空间方程使用零阶保持法，得到的离散状态空间方程为
 $$
@@ -844,7 +844,7 @@ $$
 
 **方案一：直接用x来控制**
 
-使用**x**来控制，也就是使用12个状态量来共同控制，
+使用$\mathbf{x}$来控制，也就是使用12个状态量来共同控制，
 
 则误差可写为
 $$
@@ -852,7 +852,7 @@ $$
 $$
 **方案二：用y来控制**
 
-使用**y**来控制，比如选择x,y,z,yaw来控制
+使用$\mathbf{y}$来控制，比如选择$x,y,z,yaw$来控制
 
 即
 $$
@@ -889,11 +889,7 @@ min \quad J=\sum_{k=0}^{N-1}\left( \mathbf{e_{[k]}}^\top Q \mathbf{e_{[k]}} + \m
 s.t.\quad
 \mathbf{\widetilde{x}_{[k+1]}}=A_d\mathbf{\widetilde{x}_{[k]}}+ B_d \mathbf{\widetilde{u}_{[k]}}\\
 $$
-求解得到
-$$
-\mathbf{\widetilde{U}}
-$$
-取出其中的第一个值
+求解得到$\mathbf{\widetilde{U}}$，取出其中的第一个值
 $$
 \mathbf{\widetilde{u}}=
 \begin{bmatrix}
@@ -902,7 +898,7 @@ I \quad \mathbf{0} \quad \cdots \quad  \mathbf{0}
 \cdot
 \mathbf{\widetilde{U}}
 $$
-然后求出真正用于控制的**u**
+然后求出真正用于控制的$\mathbf{u}$
 $$
 \mathbf{u}=\mathbf{\widetilde{u}}+\mathbf{u_e}
 $$
@@ -919,7 +915,7 @@ $$
 
 ## 3.控制分配
 
-下面根据无人机4个螺旋桨的转向，建立 **u**(推力和力矩) 与 4个电机转速之间的关系。
+下面根据无人机4个螺旋桨的转向，建立$\mathbf{u}$(推力和力矩) 与 4个电机转速之间的关系。
 
 <img src="无人机模型和MPC控制算法.assets/dfc1568ae1ee23c39d6eb7541ef1057.jpg" alt="dfc1568ae1ee23c39d6eb7541ef1057" style="zoom: 33%;" />
 
@@ -950,7 +946,7 @@ $$
 
 
 
-由此，可以写出 **u**(推力和力矩) 与 4个电机转速之间的关系：
+由此，可以写出 $\mathbf{u}$(推力和力矩) 与 4个电机转速之间的关系：
 
 总推力为所有螺旋桨的推力之和
 $$
@@ -1086,11 +1082,7 @@ $$
 $$
 \mathbf{u}=M\widetilde{\omega}^2
 $$
-因此，由MPC控制算法求出
-$$
-\mathbf{u}
-$$
-之后，可以求出它对应的螺旋桨转速
+因此，由MPC控制算法求出$\mathbf{u}$​之后，可以反过来求出它对应的螺旋桨转速
 $$
 \widetilde{\mathbf{\omega}}^2=M^{-1}\mathbf{u}
 $$
